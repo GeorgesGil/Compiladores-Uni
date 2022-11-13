@@ -1,0 +1,26 @@
+Georges BEGIN{
+NUM n,num,total,entra;
+DNUM promedio;
+
+
+SEND (#Promedio de Numeros#);
+WHEN( entra<1){
+SEND (#\nCuantos Numeros Planea Sumar: #);
+TAKE (#%d#+n);
+
+START i=1 STEP 1 TO n{
+
+SEND (#Dame el numero [%d]:  #+i);
+TAKE (#%d#+num);
+
+total=total+num;
+STOP}
+entra=entra+1;
+
+promedio=total/n;
+SEND( #El promedio fue: %f #+promedio);
+total=0;
+promedio=0;
+SWHEN}
+
+END}
