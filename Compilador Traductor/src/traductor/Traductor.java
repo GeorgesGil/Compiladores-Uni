@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Wilber
+ * @author Georges
  */
 public class Traductor extends javax.swing.JFrame {
  FileNameExtensionFilter filtro= new FileNameExtensionFilter("Archivos Word y txt","docx","txt");
