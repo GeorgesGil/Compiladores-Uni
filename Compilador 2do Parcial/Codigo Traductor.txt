@@ -1,343 +1,339 @@
-private void btnTraducirActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        txtATraducido.setText("");
-        String
-               simbolo = "([=<>])",
+//Boton encargado de la traduccion del codigo fuente al lenguaje intermedio, en este caso el Lenguaje C  
+    private void btnTraducirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraducirActionPerformed
+        txtTraducir.setText("");
+        String simbolo = "([=<>])",
                 id = "([(a-z)(A-Z)](\\w)*)",
                 num = "((\\d)+)",
                 dec = "((\\d)+(\\.)(\\d)+)",
-                text = "((((#)[.\\W\\w\\s]*(#))|("+id+"))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|("+id+")))*)",
-                send = "((\\s)*SEND(\\s)*(\\()(\\s)*((((#)[.\\W\\w\\s]*(#))|("+id+"))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|("+id+")))*)(\\s)*(\\))(\\s)*(;))",
+                text = "((((#)[.\\W\\w\\s]*(#))|(" + id + "))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|(" + id + ")))*)",
+                send = "((\\s)*SEND(\\s)*(\\()(\\s)*((((#)[.\\W\\w\\s]*(#))|(" + id + "))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|(" + id + ")))*)(\\s)*(\\))(\\s)*(;))",
                 //take = "((\\s)*TAKE(\\b)(\\s)*"+id+"((\\s)*(,(\\s)*"+id+"))*(\\s)*(;))",
-                take = "((\\s)*TAKE(\\s)*(\\()(\\s)*((((#)[.\\W\\w\\s]*(#))|("+id+"))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|("+id+")))*)(\\s)*(\\))(\\s)*(;))",
-                operaciones = "(("+id+"|"+num+"|"+dec+")(\\s)*([+-/*](\\s)*("+id+"|"+num+"|"+dec+"))+)",
-                defVal = "((\\s)*"+id+"(\\s)*=(\\s)*("+id+"|"+text+"|"+operaciones+"|"+num+"|"+dec+")(\\s)*(;))",
-                defValVar = "((\\s)*"+id+"(\\s)*=(\\s)*("+id+"|"+text+"|"+operaciones+"|"+num+"|"+dec+")(\\s)*)",
-                condicion = id+"(\\s)*"+simbolo+"(\\s)*("+id+"|"+num+"|"+dec+")((\\s)*([(&&)(||)](\\s)*"+id+"(\\s)*"+simbolo+"(\\s)*("+id+"|"+num+"|"+dec+")))*",
-                var = "((\\s)*((NUM)|(DNUM)|(WORD))(\\b)(\\s)*("+id+"|"+defValVar+")((\\s)*(,(\\s)*("+id+"|"+defValVar+")))*(\\s)*(;))",
-                main = "((\\s)*"+id+"txtATraducidoBEGIN(\\s)*(\\{)[.\\W\\w\\s]*(END(\\s)*(\\})(\\s)*)$)",
-                main2 = "((\\s)*"+id+"(\\b)(\\s)*BEGIN(\\s)*(\\{))",
+                take = "((\\s)*TAKE(\\s)*(\\()(\\s)*((((#)[.\\W\\w\\s]*(#))|(" + id + "))((\\s)*(\\+)((\\s)*((#)[.\\W\\w\\s]*(#))|(" + id + ")))*)(\\s)*(\\))(\\s)*(;))",
+                operaciones = "((" + id + "|" + num + "|" + dec + ")(\\s)*([+-/*](\\s)*(" + id + "|" + num + "|" + dec + "))+)",
+                defVal = "((\\s)*" + id + "(\\s)*=(\\s)*(" + id + "|" + text + "|" + operaciones + "|" + num + "|" + dec + ")(\\s)*(;))",
+                defValVar = "((\\s)*" + id + "(\\s)*=(\\s)*(" + id + "|" + text + "|" + operaciones + "|" + num + "|" + dec + ")(\\s)*)",
+                condicion = id + "(\\s)*" + simbolo + "(\\s)*(" + id + "|" + num + "|" + dec + ")((\\s)*([(&&)(||)](\\s)*" + id + "(\\s)*" + simbolo + "(\\s)*(" + id + "|" + num + "|" + dec + ")))*",
+                var = "((\\s)*((NUM)|(DNUM)|(WORD))(\\b)(\\s)*(" + id + "|" + defValVar + ")((\\s)*(,(\\s)*(" + id + "|" + defValVar + ")))*(\\s)*(;))",
+                main = "((\\s)*" + id + "txtATraducidoBEGIN(\\s)*(\\{)[.\\W\\w\\s]*(END(\\s)*(\\})(\\s)*)$)",
+                main2 = "((\\s)*" + id + "(\\b)(\\s)*BEGIN(\\s)*(\\{))",
                 main3 = "((\\s)*END(\\s)*(\\})(\\s)*)",
-                
-               start2 = "((\\s)*START(\\b)(\\s)*("+id+"|"+num+")(\\b)(\\s)*(=)*("+id+"|"+num+")(\\b)(\\s)*(STEP)(\\b)(\\s)*"+num+"(\\s)*[+-]?(\\s)*(\\b)(TO)(\\b)(\\s)*("+id+"|"+num+")(\\s)*(\\{))",
-                foresito = "((\\s)*FOR(\\b)(\\s)*("+id+"|"+num+")(\\b)(\\s)*(TO)(\\b)(\\s)*("+id+"|"+num+")(\\s)*)",
+                start2 = "((\\s)*START(\\b)(\\s)*(" + id + "|" + num + ")(\\b)(\\s)*(=)*(" + id + "|" + num + ")(\\b)(\\s)*(STEP)(\\b)(\\s)*" + num + "(\\s)*[+-]?(\\s)*(\\b)(TO)(\\b)(\\s)*(" + id + "|" + num + ")(\\s)*(\\{))",
+                foresito = "((\\s)*FOR(\\b)(\\s)*(" + id + "|" + num + ")(\\b)(\\s)*(TO)(\\b)(\\s)*(" + id + "|" + num + ")(\\s)*)",
                 start3 = "((\\s)*STOP(\\s)*(\\}))",
-                when2 = "((\\s)*WHEN(\\s)*(\\()(\\s)*"+condicion+"(\\s)*(\\))(\\s)*(\\{))",
-               when3 = "((\\s)*SWHEN(\\s)*(\\}))",
-                it2 = "((\\s)*IT(\\s)*(\\()(\\s)*"+condicion+"(\\s)*(\\))(\\s)*(\\{))",
+                when2 = "((\\s)*WHEN(\\s)*(\\()(\\s)*" + condicion + "(\\s)*(\\))(\\s)*(\\{))",
+                when3 = "((\\s)*SWHEN(\\s)*(\\}))",
+                it2 = "((\\s)*IT(\\s)*(\\()(\\s)*" + condicion + "(\\s)*(\\))(\\s)*(\\{))",
                 it3 = "((\\s)*COMPLETE(\\s)*(\\}))",
-                 entero = "[0-9]*",
-                step="(STEP)(\\b)(\\s)*"+num+"(\\s)*[+-]?(\\s)*(\\b)",
-                to="TO(\\b)(\\s)*("+id+"|"+num+")(\\s)*(\\{)",
+                entero = "[0-9]*",
+                step = "(STEP)(\\b)(\\s)*" + num + "(\\s)*[+-]?(\\s)*(\\b)",
+                to = "TO(\\b)(\\s)*(" + id + "|" + num + ")(\\s)*(\\{)",
                 decimal = "[0-9]*.[0-9]+";
+        
+        //Convertimos el codigo a token
+        StringTokenizer st = new StringTokenizer(txtCodigo.getText(), "\n");
+        String token;
+        //ciclo que funciona mientras se encuentren tokens
+        while (st.hasMoreTokens()) {
+            token = st.nextToken();
 
-                StringTokenizer st = new StringTokenizer(txtATexto1.getText(),"\n");
-                String token;
-                while (st.hasMoreTokens()){
-                    //JOptionPane.showMessageDialog(this,"Identificando Variables...");
-                    token = st.nextToken();
-                    
-                    if(token.matches(main2))
-                    {
-                        
-                        String tokinn="'";
-                        StringTokenizer tokin = new StringTokenizer(token," \n");
-                        while(tokin.hasMoreTokens()){
-                            String testo="";
-                            testo=testo+txtATraducido.getText();
-                            tokinn=tokin.nextToken();
-                            if(tokinn.contains("BEGIN")){
-                                txtATraducido.setText(testo+"REM ");
+            if (token.matches(main2)) {
 
-                            }
-                            if  (tokinn.matches(id) && tokinn.contains("BEGIN")==false  && tokinn.contains("{")==false){
-                                txtATraducido.setText(""+testo+tokinn+"");
-                            }
-                            if(tokinn.contains("{")){
-                                txtATraducido.setText(testo+" ;\n");
-                            }
-                        }
+                String tokinn = "'";
+                StringTokenizer tokin = new StringTokenizer(token, " \n");
+                while (tokin.hasMoreTokens()) {
+                    String testo = "";
+                    testo = testo + txtTraducir.getText();
+                    tokinn = tokin.nextToken();
+                    if (tokinn.contains("BEGIN")) {
+                        txtTraducir.setText("\n");
 
                     }
+                    if (tokinn.matches(id) && tokinn.contains("BEGIN") == false && tokinn.contains("{") == false) {
+                        txtTraducir.setText("" + testo + tokinn + "");
+                    }
+                    if (tokinn.contains("{")) {
+                        txtTraducir.setText("\n");
+                    }
+                }
 
-                    if(token.matches(var)){
-                        String a ="";
-                        a=txtATraducido.getText();
-                        a=a+"DIM  ";
-                        txtATraducido.setText(a);
-                        String tokinn="";
-                        StringTokenizer tokin = new StringTokenizer(token," \n,;");
-                        while(tokin.hasMoreTokens()){
-                                String testo="";
-                                testo=testo+txtATraducido.getText();
-                                tokinn=tokin.nextToken();
-                                
-                                if(tokinn.contains("NUM") || tokinn.contains("DNUM") || tokinn.contains("WORD")){
-                                    String enteros="";
-                                    if(tokinn.contains("NUM")){
-                                     enteros=" AS INTEGER";
-                                    }
-                                    if(tokinn.contains("DNUM")){
-                                     enteros=" AS DOUBLE";
-                                    }
-                                    if(tokinn.contains("WORD")){
-                                     enteros=" AS STRING";
-                                    }
+            }
 
-                                    int contador=0;
-                                    while(tokin.hasMoreTokens()){
-                                        tokinn=tokin.nextToken();
-                                        if(tokinn.equals(";")){
+            if (token.matches(var)) {
+                String tokinn = "";
+                StringTokenizer tokin = new StringTokenizer(token, " \n,;");
+                while (tokin.hasMoreTokens()) {
+                    String testo = "";
+                    testo = testo + txtTraducir.getText();
+                    tokinn = tokin.nextToken();
 
-                                        }else{
-                                          if(contador>=1){
-                                          enteros=tokinn+","+enteros;
-                                          }else{
-                                          enteros=tokinn+enteros;
-                                          }
-                                        }
-                                        contador+=1;
-                                    }
-                                    txtATraducido.setText(testo+enteros+"\n");
-                                }
-
+                    if (tokinn.contains("NUM") || tokinn.contains("DNUM") || tokinn.contains("WORD")) {
+                        String enteros = "";
+                        if (tokinn.contains("NUM")) {
+                            enteros = " int ";
                         }
+                        if (tokinn.contains("DNUM")) {
+                            enteros = " double ";
+                        }
+                        if (tokinn.contains("WORD")) {
+                            enteros = " char ";
+                        }
+
+                        int contador = 0;
+                        while (tokin.hasMoreTokens()) {
+                            tokinn = tokin.nextToken();
+                            if (tokinn.equals(";")) {
+
+                            } else {
+                                if (contador >= 1) {
+                                    if(enteros == " char "){
+                                        enteros = enteros + tokinn + "[50],";
+                                    
+                                    }
+                                    else{
+                                    enteros = enteros + "," + tokinn;
+                                    }
+                                } else {
+                                    if(enteros == " char "){
+                                        enteros = enteros + tokinn + "[50]";
+                                    
+                                    }
+                                    else{
+                                     enteros = enteros + tokinn;
+                                    }
+                                   
+                                }
+                            }
+                            contador += 1;
+                        }
+                        txtTraducir.setText( testo + enteros + ";\n");
                     }
 
                 }
-                String b=txtATraducido.getText();
-                b=b+"  \n";
-                txtATraducido.setText(b);
-                
-                
-                StringTokenizer st1 = new StringTokenizer(txtATexto1.getText(),"\n");
-                String token1;
-                while (st1.hasMoreTokens()){
-                    //JOptionPane.showMessageDialog(this,"Identificando Instrucciones...");
-                    token1 = st1.nextToken();
-                    //JOptionPane.showMessageDialog(this,token1);
-                  
-                    /*if(token1.matches(start2)){
-                      
-                        String a=txtATraducido.getText()+"\nFOR ";
-                        txtATraducido.setText(a);
-                        StringTokenizer st2= new StringTokenizer(token1,"()");
-                    }*/
-                    if(token1.matches(start3)){
-                        //JOptionPane.showMessageDialog(this,"Termina FOR");
-                        String a=txtATraducido.getText()+"\nNEXT\n";
-                        txtATraducido.setText(a);
-                    }
-                   if(token1.matches(when2)){
-                        StringTokenizer st2= new StringTokenizer (token1,"()");
-                        while(st2.hasMoreTokens()){ // poner primero por espacio con tokens y luego dentro de espacio hacer ciclo y hacer tokens por cada uno
-                            String tuken= st2.nextToken();
-                                if( tuken.contains("=") || tuken.contains("<") || tuken.contains(">")){
-                                    if(tuken.contains("=")){
-                                        StringTokenizer st3= new StringTokenizer (tuken,"=");
-                                        while(st3.hasMoreTokens()){
-                                            String tuken2=st3.nextToken();
-                                            
-                                            if(st3.hasMoreTokens()==true){
-                                                String a=txtATraducido.getText()+tuken2+"=";
-                                                txtATraducido.setText(a);
-                                            }else{
-                                                String a=txtATraducido.getText()+tuken2;
-                                                txtATraducido.setText(a);
-                                            }
-                                            
-                                        }
-                                    }else{
-                                       String a= txtATraducido.getText()+ tuken;
-                                       txtATraducido.setText(a);
-                                    }
-                            }
-                            
-                            if(tuken.contains("WHEN")){
-                                String a=txtATraducido.getText()+"\nWHILE ";
-                                txtATraducido.setText(a);
-                                /*String loqueva=a+txtATraducido.getText()+" THEN";
-                                txtATraducido.setText(loqueva);*/
-                            }
-                            if(tuken.contains("{")){
-                                String a=txtATraducido.getText()+"\n";
-                                txtATraducido.setText(a);
-                            }
-                        }
-                    }
-                    if(token1.matches(when3)){
-                        String a=txtATraducido.getText()+"\nWEND \n";
-                        txtATraducido.setText(a);
-                    }
-                    if(token1.matches(it2)){
-                        StringTokenizer st2= new StringTokenizer (token1,"()");
-                        while(st2.hasMoreTokens()){ // poner primero por espacio con tokens y luego dentro de espacio hacer ciclo y hacer tokens por cada uno
-                            String tuken= st2.nextToken();
-                                if( tuken.contains("=") || tuken.contains("<") || tuken.contains(">")){
-                                    if(tuken.contains("=")){
-                                        StringTokenizer st3= new StringTokenizer (tuken,"=");
-                                        while(st3.hasMoreTokens()){
-                                            String tuken2=st3.nextToken();
-                                            
-                                            if(st3.hasMoreTokens()==true){
-                                                String a=txtATraducido.getText()+tuken2+"=";
-                                                txtATraducido.setText(a);
-                                            }else{
-                                                String a=txtATraducido.getText()+tuken2;
-                                                txtATraducido.setText(a);
-                                            }
-                                            
-                                        }
-                                    }else{
-                                       String a= txtATraducido.getText()+ tuken;
-                                       txtATraducido.setText(a);
-                                    }
-                            }
-                            
-                            if(tuken.contains("IT")){
-                                String a=txtATraducido.getText()+"\nIF ";
-                                txtATraducido.setText(a);
-                                /*String loqueva=a+txtATraducido.getText()+" THEN";
-                                txtATraducido.setText(loqueva);*/
-                            }
-                            if(tuken.contains("{")){
-                                String a=txtATraducido.getText()+" THEN\n";
-                                txtATraducido.setText(a);
-                            }
-                        }
-                    }
-                    if(token1.matches(it3)){
-                        String a=txtATraducido.getText()+"\nEND IF \n";
-                        txtATraducido.setText(a);
-                    }
-                    if(token1.matches(main3)){
-                        
-                        String c=txtATraducido.getText()+"\n";
-                        txtATraducido.setText(c);
-                    }
-                    if(token1.matches(take)){
-                        StringTokenizer st2 = new StringTokenizer(token1,"()");
-                        while(st2.hasMoreTokens()){
-                            String tuken=st2.nextToken();
-                            if(tuken.contains("TAKE")){
-                                
-                                String a=txtATraducido.getText()+"\nINPUT  ";
-                                a=a.replace('#','"');
-                                txtATraducido.setText(a);
-                            }
-                            if(tuken.contains("+")){
-                                String tokesito;
-                                StringTokenizer tuk= new StringTokenizer(tuken,"+");
-                                while(tuk.hasMoreTokens()){
-                                    tokesito=tuk.nextToken();
-                                    if(tuk.hasMoreTokens()){
-                                        String a=txtATraducido.getText()+tokesito+",";
-                                        a=a.replace('#','"');
-                                        txtATraducido.setText(a);
-                                    }else{
-                                        String a=txtATraducido.getText()+tokesito;
-                                        a=a.replace('#','"');
-                                        
-                                        txtATraducido.setText(a);
-                                    }
+            }
+
+        }
+        String b = txtTraducir.getText();
+        b = b + "  \n";
+        txtTraducir.setText(b);
+
+        StringTokenizer st1 = new StringTokenizer(txtCodigo.getText(), "\n");
+        String token1;
+        //Aqui reemplazaremos palabras de acuerdo si se encuentran en nuestras listas
+        while (st1.hasMoreTokens()) {
+            token1 = st1.nextToken();
+            
+            if (token1.matches(start3)) {
+                String a = txtTraducir.getText() + "\n}\n";
+                txtTraducir.setText(a);
+            }
+            //Aqui reemplazamos When por While
+            if (token1.matches(when2)) {
+                StringTokenizer st2 = new StringTokenizer(token1, "()");
+                while (st2.hasMoreTokens()) { 
+                    String tuken = st2.nextToken();
+                    if (tuken.contains("=") || tuken.contains("<") || tuken.contains(">")) {
+                        if (tuken.contains("=")) {
+                            StringTokenizer st3 = new StringTokenizer(tuken, "=");
+                            while (st3.hasMoreTokens()) {
+                                String tuken2 = st3.nextToken();
+
+                                if (st3.hasMoreTokens() == true) {
+                                    String a = txtTraducir.getText() + tuken2 + "=";
+                                    txtTraducir.setText(a);
+                                } else {
+                                    String a = txtTraducir.getText() + tuken2;
+                                    txtTraducir.setText(a);
                                 }
+
                             }
-                             
-                          
-                            
-                            if (tuken.contains(";")) {
-                                String a=txtATraducido.getText()+"\n";
-                                a=a.replace('#','"');
-                                txtATraducido.setText(a);
-                                
-                            }
-                            if(tuken.contains("TAKE")==false && tuken.contains("+")==false && tuken.contains(";")==false){
-                                String a=txtATraducido.getText()+tuken;
-                                a=a.replace('#','"');
-                                txtATraducido.setText(a);
-                            }
+                        } else {
+                            String a = txtTraducir.getText() + tuken;
+                            txtTraducir.setText(a);
                         }
                     }
-                    
-                     if(token1.matches(send)){
-                        StringTokenizer st2 = new StringTokenizer(token1,"()");
-                        while(st2.hasMoreTokens()){
-                            String tuken=st2.nextToken();
-                            if(tuken.contains("SEND")){
-                                
-                                String a=txtATraducido.getText()+"\nMsgBox  ";
-                                a=a.replace('#','"');
-                                
-                                txtATraducido.setText(a);
-                            }
-                            if(tuken.contains("+")){
-                                String tokesito;
-                                StringTokenizer tuk= new StringTokenizer(tuken,"+");
-                                while(tuk.hasMoreTokens()){
-                                    tokesito=tuk.nextToken();
-                                    if(tuk.hasMoreTokens()){
-                                        String a=txtATraducido.getText()+tokesito+",";
-                                        a=a.replace('#','"');
-                                        txtATraducido.setText(a);
-                                    }else{
-                                        String a=txtATraducido.getText()+tokesito;
-                                        a=a.replace('#','"');
-                                        txtATraducido.setText(a);
-                                    }
+
+                    if (tuken.contains("WHEN")) {
+                        String a = txtTraducir.getText() + "\nwhile(";
+                        txtTraducir.setText(a);
+                    }
+                    if (tuken.contains("{")) {
+                        String a = txtTraducir.getText() + "){\n";
+                        txtTraducir.setText(a);
+                    }
+                }
+            }
+            //Aqui reemplazamos el Delimitador Swhen por }
+            if (token1.matches(when3)) {
+                String a = txtTraducir.getText() + "\n} \n";
+                txtTraducir.setText(a);
+            }
+            //Aqui reemplazamos It por If
+            if (token1.matches(it2)) {
+                StringTokenizer st2 = new StringTokenizer(token1, "()");
+                while (st2.hasMoreTokens()) { 
+                    String tuken = st2.nextToken();
+                    if (tuken.contains("=") || tuken.contains("<") || tuken.contains(">")) {
+                        if (tuken.contains("=")) {
+                            StringTokenizer st3 = new StringTokenizer(tuken, "=");
+                            while (st3.hasMoreTokens()) {
+                                String tuken2 = st3.nextToken();
+
+                                if (st3.hasMoreTokens() == true) {
+                                    String a = txtTraducir.getText() + tuken2 + "=";
+                                    txtTraducir.setText(a);
+                                } else {
+                                    String a = txtTraducir.getText() + tuken2;
+                                    txtTraducir.setText(a);
                                 }
+
                             }
-                            
-                            if (tuken.contains(";")) {
-                                String a=txtATraducido.getText()+" \n";
-                                a=a.replace('#','"');
-                                txtATraducido.setText(a);
-                            }
-                            
-                            if(tuken.contains("SEND")==false && tuken.contains("+")==false && tuken.contains(";")==false){
-                                String a=txtATraducido.getText()+tuken;
-                                a=a.replace('#','"');
-                                txtATraducido.setText(a);
-                            }
-                            
+                        } else {
+                            String a = txtTraducir.getText() + tuken;
+                            txtTraducir.setText(a);
                         }
                     }
-                    
-                    if(token1.matches(defVal)){
+
+                    if (tuken.contains("IT")) {
+                        String a = txtTraducir.getText() + "\nif( ";
+                        txtTraducir.setText(a);
+                    }
+                    if (tuken.contains("{")) {
+                        String a = txtTraducir.getText() + "){\n";
+                        txtTraducir.setText(a);
+                    }
+                }
+            }
+            if (token1.matches(it3)) {
+                String a = txtTraducir.getText() + "\n}\n";
+                txtTraducir.setText(a);
+            }
+            if (token1.matches(main3)) {
+
+                String c = "#include <stdio.h>\n#include <string.h>\n\nint main()\n{\n" + txtTraducir.getText() + "\n}";
+                txtTraducir.setText(c);
+            }
+            //Aqui reemplazamos Take por Scanf
+            if (token1.matches(take)) {
+                StringTokenizer st2 = new StringTokenizer(token1, "()");
+                while (st2.hasMoreTokens()) {
+                    String tuken = st2.nextToken();
+                    if (tuken.contains("TAKE")) {
+
+                        String a = txtTraducir.getText() + "\nscanf (";
+                        a = a.replace('#', '"');
+                        txtTraducir.setText(a);
+                    }
+                    if (tuken.contains("+")) {
                         String tokesito;
-                         StringTokenizer tuk= new StringTokenizer(token1);
-                        while(tuk.hasMoreTokens()){
-                           tokesito=tuk.nextToken();
-                           String a=txtATraducido.getText()+tokesito+"\n";
-                           a=a.replace(';',' ');
-                           txtATraducido.setText(a);
+                        StringTokenizer tuk = new StringTokenizer(tuken, "+");
+                        while (tuk.hasMoreTokens()) {
+                            tokesito = tuk.nextToken();
+                            if (tuk.hasMoreTokens()) {
+                                String a = txtTraducir.getText() + tokesito + ",&";
+                                a = a.replace('#', '"');
+                                txtTraducir.setText(a);
+                            } else {
+                                String a = txtTraducir.getText() + tokesito;
+                                a = a.replace('#', '"');
+
+                                txtTraducir.setText(a);
+                            }
                         }
-                        
-                    JOptionPane.showMessageDialog(this,"Se encontro una operación en la traduccion");
-                    
                     }
-                    
-                    //ESTA COSA ES PARA EL CICLO FOR
-                    if(token1.matches(start2)){ //Compara si esta el matches dentro del token
-                        String tokesito="";
-                        String texto="";
-                         StringTokenizer tuk= new StringTokenizer(token1,"\\s");
-                        while(tuk.hasMoreTokens()){
-                           tokesito=tuk.nextToken();
-                           String a=txtATraducido.getText()+"\n";//almacenoo todo
-                           tokesito=tokesito.replace("START","FOR");//reemplazo
-                           tokesito=tokesito.replaceAll(step," ");
-                            tokesito=tokesito.replace("({",")\n");
-                           texto+=a+tokesito;//se guarda en el acumulador de lo reemplazado
-                           txtATraducido.setText(texto);
-                           
+
+                    if (tuken.contains(";")) {
+                        String a = txtTraducir.getText() + "); \n";
+                        a = a.replace('#', '"');
+                        txtTraducir.setText(a);
+
+                    }
+                    if (tuken.contains("TAKE") == false && tuken.contains("+") == false && tuken.contains(";") == false) {
+                        String a = txtTraducir.getText() + tuken;
+                        a = a.replace('#', '"');
+                        txtTraducir.setText(a);
+                    }
+                }
+            }
+
+           //Aqui reemplazamos Send por Print
+            if (token1.matches(send)) {
+                StringTokenizer st2 = new StringTokenizer(token1, "()");
+                while (st2.hasMoreTokens()) {
+                    String tuken = st2.nextToken();
+                    if (tuken.contains("SEND")) {
+
+                        String a = txtTraducir.getText() + "\nprintf (";
+                        a = a.replace('#', '"');
+
+                        txtTraducir.setText(a);
+                    }
+                    if (tuken.contains("+")) {
+                        String tokesito;
+                        StringTokenizer tuk = new StringTokenizer(tuken, "+");
+                        while (tuk.hasMoreTokens()) {
+                            tokesito = tuk.nextToken();
+                            if (tuk.hasMoreTokens()) {
+                                String a = txtTraducir.getText() + tokesito + ",";
+                                a = a.replace('#', '"');
+                                txtTraducir.setText(a);
+                            } else {
+                                String a = txtTraducir.getText() + tokesito;
+                                a = a.replace('#', '"');
+                                txtTraducir.setText(a);
+                            }
                         }
-                       
-                    JOptionPane.showMessageDialog(this,"Se encontro un ciclo for");
-                    
                     }
-                    
-                    //CICLO FOR
-                    
-              
+
+                    if (tuken.contains(";")) {
+                        String a = txtTraducir.getText() + " ); \n";
+                        a = a.replace('#', '"');
+                        txtTraducir.setText(a);
+                    }
+                    if (tuken.contains("SEND") == false && tuken.contains("+") == false && tuken.contains(";") == false) {
+                        String a = txtTraducir.getText() + tuken;
+                        a = a.replace('#', '"');
+                        txtTraducir.setText(a);
+                    }
+                }
+            }
+
+            if (token1.matches(defVal)) {
+                String tokesito;
+                StringTokenizer tuk = new StringTokenizer(token1);
+                while (tuk.hasMoreTokens()) {
+                    tokesito = tuk.nextToken();
+                    String a = txtTraducir.getText() + tokesito + "\n";
+                    a = a.replace(';', ';');
+                    txtTraducir.setText(a);
                 }
 
-    }                                           
+                JOptionPane.showMessageDialog(this, "Operacion encontrada en la generacion del codigo intermedio");
+
+            }
+
+            //Reemplazo Ciclo FOR
+            if (token1.matches(start2)) { 
+                String tokesito = "";
+                String texto = "";
+                StringTokenizer tuk = new StringTokenizer(token1, "\\s");
+                while (tuk.hasMoreTokens()) {
+                    tokesito = tuk.nextToken();
+                    String a = txtTraducir.getText() + "\n";
+                    tokesito = tokesito.replace("START", "for(int");
+                    tokesito = tokesito.replace("TO", "i <=");
+                    tokesito = tokesito.replaceAll(step, "; ");
+                    tokesito = tokesito.replace("{", ";i++){\n");
+                    texto += a + tokesito;
+                    txtTraducir.setText(texto);
+
+                }
+                JOptionPane.showMessageDialog(this, "Se encontro un ciclo for");
+
+            }
+            
+              
+
+            
+        }
+
+    }//GEN-LAST:event_btnTraducirActionPerformed
